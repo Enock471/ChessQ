@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface-950: #060608;
+  --color-surface-900: #0c0c0f;
+  --color-surface-850: #111116;
+  --color-surface-800: #17171d;
+  --color-surface-700: #222228;
+  --color-surface-600: #2e2e36;
+  --color-border: #2a2a32;
+  --color-border-light: #3a3a44;
+  --color-accent: #22ff88;
+  --color-accent-hover: #1de676;
+  --color-accent-muted: #16a34a;
+  --color-accent-glow: rgba(34, 255, 136, 0.35);
+  --color-gold: #d4af37;
+  --color-gold-light: #f0d060;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-surface-950 text-white;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 255, 136, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(34, 255, 136, 0.04), transparent);
+  }
+
+  ::selection {
+    @apply bg-accent/30 text-white;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply rounded-2xl border border-border bg-surface-850/80 backdrop-blur-xl;
+  }
+
+  .glow-accent {
+    box-shadow:
+      0 0 20px var(--color-accent-glow),
+      0 0 40px rgba(34, 255, 136, 0.12);
+  }
+
+  .text-gradient-accent {
+    @apply bg-linear-to-r from-accent to-emerald-300 bg-clip-text text-transparent;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chess-board-wrap {
+    perspective: 1200px;
+  }
+
+  .chess-board-3d {
+    transform: rotateX(58deg) rotateZ(-8deg);
+    transform-style: preserve-3d;
+    transition: transform 0.7s ease;
+  }
+
+  .chess-board-wrap:hover .chess-board-3d {
+    transform: rotateX(52deg) rotateZ(-4deg);
+  }
+}
