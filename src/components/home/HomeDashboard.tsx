@@ -14,21 +14,19 @@ export function HomeDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-surface-950">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <TopHeader onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="flex-1 space-y-6 p-4 sm:p-6 lg:p-8">
-          <div className="grid gap-6 xl:grid-cols-[1fr_280px]">
+        <main className="flex-1 space-y-5 p-4 sm:space-y-6 sm:p-5 lg:p-6">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-5">
             <HeroSection />
-            <div className="xl:order-none">
-              <StatsPanel />
-            </div>
+            <StatsPanel />
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             <LiveMatches />
             <UpcomingTournaments />
           </div>
@@ -37,7 +35,7 @@ export function HomeDashboard() {
           <FeatureFooter />
         </main>
 
-        <footer className="border-t border-border px-4 py-6 text-center text-xs text-zinc-600 sm:px-6 lg:px-8">
+        <footer className="border-t border-border px-4 py-5 text-center text-[11px] text-zinc-600 sm:px-6">
           © {new Date().getFullYear()} ChessQ. Play fair. Play bold.
         </footer>
       </div>

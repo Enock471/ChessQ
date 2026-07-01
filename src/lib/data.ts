@@ -97,8 +97,8 @@ export const userStats: UserStat[] = [
   { label: "Rating", value: "1842", icon: TrendingUp },
   { label: "Games", value: "342", icon: Gamepad2 },
   { label: "Wins", value: "180", icon: Trophy },
-  { label: "Win Rate", value: "57.3%", icon: Percent },
-  { label: "Best Rating", value: "1867", icon: Star },
+  { label: "Win Rate", value: "57.8%", icon: Percent },
+  { label: "Best Rating", value: "1987", icon: Star },
 ];
 
 export const liveMatches: LiveMatch[] = [

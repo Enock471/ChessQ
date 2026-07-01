@@ -1,8 +1,9 @@
 "use client";
 
-import { Crown, Sparkles, X } from "lucide-react";
+import { ChevronDown, Crown, Sparkles, X } from "lucide-react";
 import { navItems, user } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { AvatarPlaceholder } from "@/components/ui/AvatarPlaceholder";
 
 type SidebarProps = {
   open?: boolean;
@@ -24,17 +25,17 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-border bg-surface-900/95 backdrop-blur-xl transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col border-r border-border bg-surface-900/98 backdrop-blur-xl transition-transform duration-300 lg:static lg:z-auto lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           className,
         )}
       >
-        <div className="flex items-center justify-between border-b border-border px-6 py-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15 ring-1 ring-accent/30">
-              <Sparkles className="h-5 w-5 text-accent" strokeWidth={2.2} />
+        <div className="flex items-center justify-between px-5 py-5">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15 ring-1 ring-accent/25">
+              <Sparkles className="h-4 w-4 text-accent" strokeWidth={2.2} />
             </div>
-            <span className="text-xl font-bold tracking-tight">
+            <span className="text-lg font-bold tracking-tight">
               Chess<span className="text-accent">Q</span>
             </span>
           </div>
@@ -48,7 +49,7 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -56,16 +57,16 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
                 key={item.label}
                 href={item.href}
                 className={cn(
-                  "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
+                  "group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all",
                   item.active
-                    ? "border-l-2 border-accent bg-accent/10 text-accent"
-                    : "border-l-2 border-transparent text-zinc-400 hover:bg-surface-800 hover:text-white",
+                    ? "border-l-[3px] border-accent bg-accent/12 text-white"
+                    : "border-l-[3px] border-transparent text-zinc-500 hover:bg-surface-800/80 hover:text-zinc-200",
                 )}
               >
                 <Icon
                   className={cn(
-                    "h-5 w-5 shrink-0",
-                    item.active ? "text-accent" : "text-zinc-500 group-hover:text-zinc-300",
+                    "h-[18px] w-[18px] shrink-0",
+                    item.active ? "text-accent" : "text-zinc-600 group-hover:text-zinc-400",
                   )}
                 />
                 {item.label}
@@ -74,38 +75,37 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
           })}
         </nav>
 
-        <div className="space-y-4 px-4 pb-6">
+        <div className="space-y-3 px-3 pb-4">
           <div className="glass-panel relative overflow-hidden p-4">
-            <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent/10 blur-2xl" />
+            <div className="pointer-events-none absolute -right-4 -top-4 h-20 w-20 rounded-full bg-accent/10 blur-2xl" />
             <div className="relative">
-              <div className="mb-3 flex items-center gap-2">
-                <Crown className="h-5 w-5 text-gold" />
-                <span className="text-xs font-bold uppercase tracking-wider text-gold">
+              <div className="mb-2 flex items-center gap-2">
+                <Crown className="h-4 w-4 text-gold" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gold">
                   ChessQ Premium
                 </span>
               </div>
-              <p className="mb-4 text-xs leading-relaxed text-zinc-400">
+              <p className="mb-3 text-[11px] leading-relaxed text-zinc-500">
                 Unlock all features, advanced analytics, and exclusive tournaments.
               </p>
               <button
                 type="button"
-                className="w-full rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-surface-950 transition hover:bg-accent-hover glow-accent"
+                className="w-full rounded-lg bg-accent px-3 py-2 text-xs font-bold text-surface-950 transition hover:bg-accent-hover glow-accent"
               >
                 Upgrade Now
               </button>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-xl border border-border bg-surface-850 px-4 py-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-accent/30 to-emerald-600/20 text-sm font-bold text-accent ring-2 ring-accent/20">
-              {user.avatar}
-            </div>
-            <div className="min-w-0">
+          <div className="flex items-center gap-2.5 rounded-xl border border-border bg-surface-850 px-3 py-2.5">
+            <AvatarPlaceholder size="md" />
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{user.name}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-[11px] text-zinc-500">
                 Rating <span className="font-medium text-accent">{user.rating}</span>
               </p>
             </div>
+            <ChevronDown className="h-4 w-4 shrink-0 text-zinc-600" />
           </div>
         </div>
       </aside>

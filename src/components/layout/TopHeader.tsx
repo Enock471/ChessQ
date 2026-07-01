@@ -1,7 +1,8 @@
 "use client";
 
-import { Bell, Mail, Menu } from "lucide-react";
+import { Bell, ChevronDown, Mail, Menu } from "lucide-react";
 import { user } from "@/lib/data";
+import { AvatarPlaceholder } from "@/components/ui/AvatarPlaceholder";
 
 type TopHeaderProps = {
   onMenuClick?: () => void;
@@ -9,35 +10,28 @@ type TopHeaderProps = {
 
 export function TopHeader({ onMenuClick }: TopHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border/80 bg-surface-950/80 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          aria-label="Open menu"
-          className="rounded-xl border border-border bg-surface-850 p-2.5 text-zinc-300 transition hover:border-border-light hover:text-white lg:hidden"
-          onClick={onMenuClick}
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <div className="lg:hidden">
-          <p className="text-sm font-semibold">Welcome back, {user.name}</p>
-          <p className="text-xs text-zinc-500">Ready to dominate?</p>
-        </div>
-      </div>
+    <header className="sticky top-0 z-30 flex items-center justify-end border-b border-border/70 bg-surface-950/90 px-4 py-3.5 backdrop-blur-xl sm:px-5 lg:px-6">
+      <button
+        type="button"
+        aria-label="Open menu"
+        className="mr-auto rounded-xl border border-border bg-surface-850 p-2.5 text-zinc-300 transition hover:border-border-light hover:text-white lg:hidden"
+        onClick={onMenuClick}
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
       <div className="flex items-center gap-2 sm:gap-3">
         <IconButton icon={Bell} label="Notifications" badge />
         <IconButton icon={Mail} label="Messages" badge />
-        <div className="ml-1 hidden items-center gap-3 rounded-xl border border-border bg-surface-850 py-1.5 pl-1.5 pr-4 sm:flex">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-accent/30 to-emerald-700/20 text-sm font-bold text-accent">
-            {user.avatar}
-          </div>
-          <div>
+        <div className="ml-1 flex items-center gap-2.5 rounded-xl border border-border bg-surface-850 py-1.5 pl-1.5 pr-3">
+          <AvatarPlaceholder size="md" />
+          <div className="hidden sm:block">
             <p className="text-sm font-semibold leading-none">{user.name}</p>
             <p className="mt-0.5 text-xs text-zinc-500">
               Rating <span className="text-accent">{user.rating}</span>
             </p>
           </div>
+          <ChevronDown className="hidden h-4 w-4 text-zinc-500 sm:block" />
         </div>
       </div>
     </header>
