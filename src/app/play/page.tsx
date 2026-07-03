@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Chess } from "chess.js";
-import { Chessboard, type ChessboardOptions } from "react-chessboard";
+import {
+  Chessboard,
+  type ChessboardOptions,
+  type PieceDropHandlerArgs,
+} from "react-chessboard";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopHeader } from "@/components/layout/TopHeader";
 import { GlassCard } from "@/components/ui/GlassCard";
 
-// Sub-phase 0.1: just get a board on screen at the standard starting
-// position, styled to match ChessQ's dark theme. Move logic (chess.js
-// validation, turn handling) is wired up in sub-phase 0.2 — this board
-// isn't interactive yet.
-const boardOptions: ChessboardOptions = {
-  position: new Chess().fen(),
-  boardOrientation: "white",
-  showNotation: true,
+// Board colors kept as a constant so the styling stays identical between
+// renders (sub-phase 0.1's dark/gold theme match).
+const boardTheme = {
   darkSquareStyle: { backgroundColor: "#1c1a17" },
   lightSquareStyle: { backgroundColor: "#caa968" },
   darkSquareNotationStyle: { color: "#caa968" },
@@ -23,6 +22,51 @@ const boardOptions: ChessboardOptions = {
 
 export default function PlayPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // The Chess instance holds the full game state (board, turn, legality
+  // rules). useMemo (not useState) keeps the SAME instance alive across
+  // re-renders — we mutate it in place via .move() and copy its FEN into
+  // React state below to trigger re-renders.
+  const chessGame = useMemo(() => new Chess(), []);
+  const [fen, setFen] = useState(chessGame.fen());
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  function onPieceDrop({
+    sourceSquare,
+    targetSquare,
+  }: PieceDropHandlerArgs): boolean {
+    // Piece was dragged off the board entirely.
+    if (!targetSquare) return false;
+
+    try {
+      // chess.js throws for illegal moves (wrong turn, moving through
+      // pieces, leaving your own king in check, etc.) rather than
+      // returning null, so we catch that and treat it as a rejected drop.
+      // Promotions always auto-queen for now — a picker UI is sub-phase 0.3.
+      chessGame.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
+    } catch {
+      setStatusMessage("Illegal move — try again.");
+      return false;
+    }
+
+    setFen(chessGame.fen());
+    setStatusMessage(null);
+    return true;
+  }
+
+  const boardOptions: ChessboardOptions = {
+    position: fen,
+    onPieceDrop,
+    // Only the side whose turn it is can pick up a piece — this is what
+    // makes hotseat turn-passing feel automatic instead of relying purely
+    // on illegal-move rejection.
+    canDragPiece: ({ piece }) => piece.pieceType[0] === chessGame.turn(),
+    boardOrientation: "white",
+    showNotation: true,
+    ...boardTheme,
+  };
+
+  const turnLabel = chessGame.turn() === "w" ? "White" : "Black";
 
   return (
     <div className="flex min-h-screen bg-surface-950">
@@ -42,6 +86,17 @@ export default function PlayPage() {
             </p>
 
             <GlassCard className="p-3 sm:p-5">
+              <div className="mb-4 flex items-center justify-between px-1">
+                <p className="text-sm font-semibold text-zinc-200">
+                  Turn: <span className="text-accent">{turnLabel}</span>
+                </p>
+                {statusMessage && (
+                  <p className="text-xs font-medium text-red-400">
+                    {statusMessage}
+                  </p>
+                )}
+              </div>
+
               <div className="mx-auto aspect-square w-full max-w-[560px]">
                 <Chessboard options={boardOptions} />
               </div>
