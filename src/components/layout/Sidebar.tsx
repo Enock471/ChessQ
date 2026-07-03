@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ChevronDown, Crown, Sparkles, X } from "lucide-react";
 import { navItems, user } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,7 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
                 className={cn(
@@ -70,7 +71,7 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
                   )}
                 />
                 {item.label}
-              </a>
+              </Link>
             );
           })}
         </nav>

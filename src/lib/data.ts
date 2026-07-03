@@ -79,7 +79,7 @@ export const user = {
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "#", icon: Home, active: true },
-  { label: "Play", href: "#play", icon: Play },
+  { label: "Play", href: "/play", icon: Play },
   { label: "Tournaments", href: "#tournaments", icon: Trophy },
   { label: "Leaderboard", href: "#leaderboard", icon: Medal },
   { label: "Learn", href: "#learn", icon: BookOpen },
