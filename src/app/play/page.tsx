@@ -44,6 +44,19 @@ type PendingPromotion = {
   color: "w" | "b";
 };
 
+// Legal-move highlight styles (sub-phase 0.4). A soft dot for empty
+// destination squares, a colored ring for squares where the move would
+// capture, and a tint on the square that's currently picked up.
+const SELECTED_SQUARE_STYLE = { backgroundColor: "rgba(34, 255, 136, 0.25)" };
+const LEGAL_MOVE_DOT_STYLE = {
+  backgroundImage:
+    "radial-gradient(circle, rgba(34, 255, 136, 0.65) 22%, transparent 23%)",
+};
+const LEGAL_CAPTURE_STYLE = {
+  boxShadow: "inset 0 0 0 4px rgba(34, 255, 136, 0.8)",
+  borderRadius: "4px",
+};
+
 export default function PlayPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -57,6 +70,7 @@ export default function PlayPage() {
   const [gameOverMessage, setGameOverMessage] = useState<string | null>(null);
   const [pendingPromotion, setPendingPromotion] =
     useState<PendingPromotion | null>(null);
+  const [selectedSquare, setSelectedSquare] = useState<Square | null>(null);
 
   // Reads chess.js's own game-over flags after a move is made. Nothing
   // here is specific to any particular opening or mating pattern — it
@@ -86,6 +100,10 @@ export default function PlayPage() {
     sourceSquare,
     targetSquare,
   }: PieceDropHandlerArgs): boolean {
+    // The drag has ended one way or another (dropped, cancelled, off-board)
+    // so the highlight always clears here, regardless of outcome below.
+    setSelectedSquare(null);
+
     if (gameOverMessage) return false;
     if (!targetSquare) return false;
 
@@ -153,9 +171,33 @@ export default function PlayPage() {
     setPendingPromotion(null);
   }
 
+  // Recomputed from chess.js's own move generator every time a piece is
+  // selected — never a separately maintained list — so highlighted
+  // squares can never drift out of sync with what's actually legal.
+  const squareStyles: Record<string, React.CSSProperties> = {};
+  if (selectedSquare) {
+    squareStyles[selectedSquare] = SELECTED_SQUARE_STYLE;
+    const legalMoves = chessGame.moves({
+      square: selectedSquare,
+      verbose: true,
+    });
+    for (const move of legalMoves) {
+      const isCapture = move.flags.includes("c") || move.flags.includes("e");
+      squareStyles[move.to] = isCapture
+        ? LEGAL_CAPTURE_STYLE
+        : LEGAL_MOVE_DOT_STYLE;
+    }
+  }
+
   const boardOptions: ChessboardOptions = {
     position: fen,
     onPieceDrop,
+    // Fires when a drag starts — used to show legal-move highlights for
+    // the picked-up piece.
+    onPieceDrag: ({ square }) => {
+      if (square) setSelectedSquare(square as Square);
+    },
+    squareStyles,
     // Only the side whose turn it is can pick up a piece, and nobody can
     // once the game has ended — this is what makes hotseat turn-passing
     // feel automatic instead of relying purely on illegal-move rejection.
