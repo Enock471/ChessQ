@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Crown, Sparkles, X } from "lucide-react";
-import { navItems, user } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { Crown, LogOut, Sparkles, X } from "lucide-react";
+import { navItems } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { AvatarPlaceholder } from "@/components/ui/AvatarPlaceholder";
+import { useAuth } from "@/lib/auth-context";
 
 type SidebarProps = {
   open?: boolean;
@@ -13,6 +15,18 @@ type SidebarProps = {
 };
 
 export function Sidebar({ open, onClose, className }: SidebarProps) {
+  const router = useRouter();
+  const { user, profile, loading, signOut } = useAuth();
+
+  const displayName =
+    profile?.display_name || profile?.username || user?.email?.split("@")[0];
+  const rating = profile?.rating ?? 1200;
+
+  async function handleLogout() {
+    await signOut();
+    router.push("/login");
+  }
+
   return (
     <>
       {open && (
@@ -98,16 +112,37 @@ export function Sidebar({ open, onClose, className }: SidebarProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 rounded-xl border border-border bg-surface-850 px-3 py-2.5">
-            <AvatarPlaceholder size="md" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">{user.name}</p>
-              <p className="text-[11px] text-zinc-500">
-                Rating <span className="font-medium text-accent">{user.rating}</span>
-              </p>
+          {loading ? (
+            <div className="h-[58px] animate-pulse rounded-xl border border-border bg-surface-850" />
+          ) : user ? (
+            <div className="flex items-center gap-2.5 rounded-xl border border-border bg-surface-850 px-3 py-2.5">
+              <AvatarPlaceholder size="md" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold">
+                  {displayName}
+                </p>
+                <p className="text-[11px] text-zinc-500">
+                  Rating{" "}
+                  <span className="font-medium text-accent">{rating}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Log out"
+                onClick={handleLogout}
+                className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition hover:bg-surface-800 hover:text-white"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
             </div>
-            <ChevronDown className="h-4 w-4 shrink-0 text-zinc-600" />
-          </div>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center justify-center rounded-xl border border-border bg-surface-850 px-3 py-2.5 text-sm font-semibold text-zinc-200 transition hover:border-accent/40 hover:text-accent"
+            >
+              Log In
+            </Link>
+          )}
         </div>
       </aside>
     </>

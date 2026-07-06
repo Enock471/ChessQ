@@ -1,0 +1,35 @@
+---
+description: "ChessQ project rules — stack, scope, and working style. Always apply."
+alwaysApply: true
+---
+
+# ChessQ — Project Rules
+
+## Project
+ChessQ — a chess platform (play, learn, compete). Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4. Hosted on Vercel.
+
+## Stack — DO NOT DEVIATE
+- Frontend/hosting: Next.js + Vercel
+- Backend: Supabase (Auth, Postgres, Realtime) — NOT a custom backend service
+- Chess rules engine: chess.js (NOT python-chess, NOT hand-written rules logic)
+- Board UI: react-chessboard
+- AI/analysis (later phase): stockfish.js (WebAssembly, browser-side)
+
+**NEVER suggest or introduce:** Python, Redis, Kubernetes, Docker orchestration, microservices, a custom JWT auth service, MongoDB, or any other database. If a task seems to need one of these, stop and ask instead of adding it.
+
+## Reference document
+`ChessQ_Platform_Spec_v2_1_Adapted.md`, located in `.cursor/plans/`, is the source of truth for architecture, features, database schema, and phasing. Its "V1" / "Later" / "Deferred" labels are strict scope boundaries, not suggestions — do not build ahead of the current phase, even if a "Later" feature seems quick to add.
+
+That document describes the full long-term vision. It is a reference and phased roadmap, not an instruction to build everything at once.
+
+## Working style
+- I am still learning to code. Favor clarity and readability over cleverness. Briefly explain non-obvious choices, in comments or in your response.
+- Work in small, testable phases. Do not implement multiple phases in one sitting even if a plan covers more.
+- Before writing code for a new phase, briefly restate what you're about to build and why, so mistakes get caught early.
+- Do not modify files outside the current phase's scope unless explicitly asked.
+- Do not add features, pages, libraries, or infrastructure not in the current phase, even if they seem like good ideas — ask first.
+- After finishing a task, clearly list every file you created or changed.
+- End every phase with a "STOP HERE — manual test checklist" telling me exactly what to click/try before we continue.
+
+## Git
+- Assume the repo is committed before each session. Never run destructive git commands (force push, `reset --hard`, etc.) without explicit confirmation.
